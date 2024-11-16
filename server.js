@@ -6,7 +6,7 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
-import fs from 'fs';
+// import fs from 'fs';
 
 
 
