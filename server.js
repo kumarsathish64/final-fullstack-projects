@@ -1,42 +1,56 @@
 
 
 
-import express, { Router } from "express";
+import express from "express";
 import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from "dotenv";
 import multer from "multer";
-// import fs from 'fs';
+import Path from 'path';
 
 
 
 
-dotenv.config(); // Load environment variables from .env file
 
-// const path = 'C:/uploads';
 
-// if (!fs.existsSync(path)) {
-//     fs.mkdirSync(path, { recursive: true });
-// }
+// https://project-full-stack-tawny.vercel.app/api/subjects
+
+
+dotenv.config(); 
+
+
+
 
 
 const app = express();
+
 app.use(express.json());
-app.use(cors()); // Enable CORS for all routes
+app.use(cors()); 
 
 app.use(express.urlencoded({ extended: true }));
 
 
+app.use(express.static('./uploads'));
+
 const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, '/uploads/')
+  destination: function (req, file, cb){
+    cb(null, './uploads')
   },
   filename: function (req, file, cb) {
    
-    cb(null, Date .now() + '-' + file.originalname)
+    cb(null, Date .now() + '-' +Path.extname(file.originalname))
   }
 })
 
+let maxsize = 2 * 1024 * 1024
+
+multer({
+  storage: storage,
+  limits: {
+    fileSize:maxsize 
+  }
+
+})
 const upload = multer({ storage })
 
 
