@@ -147,7 +147,7 @@ app.delete('/api/subjects/:id', async (req, res) => {
 });
 
 // Start the server
-const PORT = process.env.PORT || 4000;
+const PORT = process.env.PORT || 3004;
 app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
