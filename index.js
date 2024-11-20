@@ -48,56 +48,32 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // POST route: Add a new subject (course)
-// app.post('/api/subjects', upload.single('image'), async (req, res) => {
-//   if (!req.file) {
-//     return res.status(400).json({ message: 'Image file is required.' });
-//   }
-
-//   const { course, bookname, author, edition, price, description } = req.body;
-
-//   if (!course || !bookname || !author || !edition || !price || !description) {
-//     return res.status(400).json({ message: 'All fields are required.' });
-//   }
-
-//   const parsedPrice = parseFloat(price);
-//   if (isNaN(parsedPrice)) {
-//     return res.status(400).json({ message: 'Price must be a valid number.' });
-//   }
-
-//   const newSubject = new Subject({
-//     course,
-//     bookname,
-//     author,
-//     edition,
-//     price: parsedPrice,
-//     description,
-//     image: req.file.buffer,
-//     contentType: req.file.mimetype,
-//   });
 app.post('/api/subjects', upload.single('image'), async (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: 'Image file is required.' });
+  }
+
   const { course, bookname, author, edition, price, description } = req.body;
-  let image = '';
 
-  if (req.file) {
-    image = `data:image/jpeg;base64,${req.file.buffer.toString('base64')}`;
+  if (!course || !bookname || !author || !edition || !price || !description) {
+    return res.status(400).json({ message: 'All fields are required.' });
   }
 
-  try {
-    const subject = new Subject({
-      course,
-      bookname,
-      author,
-      edition,
-      price,
-      description,
-      image,
-    });
-
-    await subject.save();
-    res.status(201).send('Subject created');
-  } catch (err) {
-    res.status(500).send("Error creating subject");
+  const parsedPrice = parseFloat(price);
+  if (isNaN(parsedPrice)) {
+    return res.status(400).json({ message: 'Price must be a valid number.' });
   }
+
+  const newSubject = new Subject({
+    course,
+    bookname,
+    author,
+    edition,
+    price: parsedPrice,
+    description,
+    image: req.file.buffer,
+    contentType: req.file.mimetype,
+  });
 
   try {
     const savedSubject = await newSubject.save();
@@ -105,9 +81,7 @@ app.post('/api/subjects', upload.single('image'), async (req, res) => {
   } catch (error) {
     res.status(400).json({ message: 'Error creating subject', error });
   }
-
 });
-
 
 // GET route: Get all subjects (with optional limit)
 app.get('/api/subjects', async (req, res) => {
